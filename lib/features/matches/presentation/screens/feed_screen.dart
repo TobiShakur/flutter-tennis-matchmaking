@@ -394,25 +394,14 @@ class FeedScreenState extends State<FeedScreen>
   Widget build(BuildContext context) {
     super.build(context);
     final topPadding = MediaQuery.of(context).padding.top;
-    final screenWidth = MediaQuery.of(context).size.width;
 
     final profileState = context.watch<ProfileBloc>().state;
     final nombreUsuario =
         profileState.miPerfil?.nombre.split(' ').first ?? 'Tobías';
     final nivelUsuario = profileState.miPerfil?.nivel ?? 'Intermedio';
 
-    const double headerHeight = 52.0;
-    final double listTop = topPadding + 34 + headerHeight + 14;
-    const double listLeft = 24.0;
-    final double listWidth = screenWidth - 48.0;
-
-    final double mapTop = topPadding + 28.0;
-    const double mapWidth = 200.0;
-    final double mapLeft = (screenWidth - mapWidth) / 2;
-
     return BlocBuilder<MatchesBloc, MatchesState>(
       builder: (context, state) {
-        // FILTRO DE NEGOCIO: No mostrar en el feed los partidos donde ya estoy unido
         final partidosDisponibles = state.partidos
             .where(
               (p) => !p.jugadoresUnidosIds.contains(AppConstants.currentUserId),
@@ -421,416 +410,452 @@ class FeedScreenState extends State<FeedScreen>
 
         return Scaffold(
           backgroundColor: AppTheme.backgroundColor,
-          body: Stack(
-            children: [
-              SafeArea(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 34, 20, 0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SlideTransition(
-                        position: _headerSlideAnimation,
-                        child: _buildHeader(
-                          nombreUsuario,
-                          partidosDisponibles.length,
-                          state.totalFiltrosActivos,
-                        ),
-                      ),
-                      const SizedBox(height: 14),
-                      const SizedBox(height: 38),
-                      const SizedBox(height: 14),
-                      SlideTransition(
-                        position: _headerSlideAnimation,
-                        child: SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          physics: const AlwaysScrollableScrollPhysics(),
-                          child: Row(
-                            children: [
-                              _buildDarkFilterChip(
-                                label: 'Todos',
-                                isSelected:
-                                    state.modalidadesFiltro.isEmpty &&
-                                    state.superficiesFiltro.isEmpty &&
-                                    state.nivelesFiltro.isEmpty,
-                                onSelected: () {
-                                  context.read<MatchesBloc>().add(
-                                    LoadMatchesAction(
-                                      modalidadesFiltro: const [],
-                                      superficiesFiltro: const [],
-                                      nivelesFiltro: const [],
-                                      nivelUsuario: nivelUsuario,
-                                    ),
-                                  );
-                                },
-                              ),
-                              const SizedBox(width: 8),
-                              _buildDarkFilterChip(
-                                label: 'Singles',
-                                isSelected: state.modalidadesFiltro.contains(
-                                  'Singles',
-                                ),
-                                onSelected: () {
-                                  final activo = state.modalidadesFiltro
-                                      .contains('Singles');
-                                  context.read<MatchesBloc>().add(
-                                    LoadMatchesAction(
-                                      modalidadesFiltro: activo
-                                          ? const []
-                                          : const ['Singles'],
-                                      superficiesFiltro:
-                                          state.superficiesFiltro,
-                                      nivelesFiltro: state.nivelesFiltro,
-                                      nivelUsuario: nivelUsuario,
-                                    ),
-                                  );
-                                },
-                              ),
-                              const SizedBox(width: 8),
-                              _buildDarkFilterChip(
-                                label: 'Dobles',
-                                isSelected: state.modalidadesFiltro.contains(
-                                  'Dobles',
-                                ),
-                                onSelected: () {
-                                  final activo = state.modalidadesFiltro
-                                      .contains('Dobles');
-                                  context.read<MatchesBloc>().add(
-                                    LoadMatchesAction(
-                                      modalidadesFiltro: activo
-                                          ? const []
-                                          : const ['Dobles'],
-                                      superficiesFiltro:
-                                          state.superficiesFiltro,
-                                      nivelesFiltro: state.nivelesFiltro,
-                                      nivelUsuario: nivelUsuario,
-                                    ),
-                                  );
-                                },
-                              ),
-                              const SizedBox(width: 8),
-                              _buildDarkFilterChip(
-                                label: 'Polvo de ladrillo',
-                                isSelected: state.superficiesFiltro.contains(
-                                  'Polvo de ladrillo',
-                                ),
-                                onSelected: () {
-                                  final activo = state.superficiesFiltro
-                                      .contains('Polvo de ladrillo');
-                                  context.read<MatchesBloc>().add(
-                                    LoadMatchesAction(
-                                      modalidadesFiltro:
-                                          state.modalidadesFiltro,
-                                      superficiesFiltro: activo
-                                          ? const []
-                                          : const ['Polvo de ladrillo'],
-                                      nivelesFiltro: state.nivelesFiltro,
-                                      nivelUsuario: nivelUsuario,
-                                    ),
-                                  );
-                                },
-                              ),
-                              const SizedBox(width: 8),
-                              _buildDarkFilterChip(
-                                label: 'Cemento',
-                                isSelected: state.superficiesFiltro.contains(
-                                  'Cemento',
-                                ),
-                                onSelected: () {
-                                  final activo = state.superficiesFiltro
-                                      .contains('Cemento');
-                                  context.read<MatchesBloc>().add(
-                                    LoadMatchesAction(
-                                      modalidadesFiltro:
-                                          state.modalidadesFiltro,
-                                      superficiesFiltro: activo
-                                          ? const []
-                                          : const ['Cemento'],
-                                      nivelesFiltro: state.nivelesFiltro,
-                                      nivelUsuario: nivelUsuario,
-                                    ),
-                                  );
-                                },
-                              ),
-                              const SizedBox(width: 8),
-                              _buildDarkFilterChip(
-                                label: 'Césped',
-                                isSelected: state.superficiesFiltro.contains(
-                                  'Césped',
-                                ),
-                                onSelected: () {
-                                  final activo = state.superficiesFiltro
-                                      .contains('Césped');
-                                  context.read<MatchesBloc>().add(
-                                    LoadMatchesAction(
-                                      modalidadesFiltro:
-                                          state.modalidadesFiltro,
-                                      superficiesFiltro: activo
-                                          ? const []
-                                          : const ['Césped'],
-                                      nivelesFiltro: state.nivelesFiltro,
-                                      nivelUsuario: nivelUsuario,
-                                    ),
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      SlideTransition(
-                        position: _headerSlideAnimation,
-                        child: _buildSectionHeader(partidosDisponibles.length),
-                      ),
-                      const SizedBox(height: 12),
-                      // Lista de Partidos con Pull to Refresh
-                      Expanded(
-                        child: state.isLoadingFeed
-                            ? const Center(
-                                child: CircularProgressIndicator(
-                                  color: AppTheme.accentLimeColor,
-                                ),
-                              )
-                            : RefreshIndicator(
-                                color: AppTheme.accentLimeColor,
-                                backgroundColor: const Color(0xFF161E1A),
-                                onRefresh: () async {
-                                  context.read<MatchesBloc>().add(
-                                    LoadMatchesAction(
-                                      modalidadesFiltro:
-                                          state.modalidadesFiltro,
-                                      superficiesFiltro:
-                                          state.superficiesFiltro,
-                                      nivelesFiltro: state.nivelesFiltro,
-                                      nivelUsuario: nivelUsuario,
-                                    ),
-                                  );
-                                },
-                                child: partidosDisponibles.isEmpty
-                                    ? ListView(
-                                        physics:
-                                            const AlwaysScrollableScrollPhysics(),
-                                        padding: const EdgeInsets.only(
-                                          top: 40,
-                                          bottom: 120,
-                                        ),
-                                        children: [
-                                          Center(
-                                            child: Container(
-                                              margin:
-                                                  const EdgeInsets.symmetric(
-                                                    horizontal: 16,
-                                                  ),
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                    horizontal: 24,
-                                                    vertical: 32,
-                                                  ),
-                                              decoration: BoxDecoration(
-                                                color: const Color(0xFF161E1A),
-                                                borderRadius:
-                                                    BorderRadius.circular(20),
-                                                border: Border.all(
-                                                  color: Colors.white
-                                                      .withValues(alpha: 0.1),
-                                                  width: 1.2,
-                                                ),
-                                              ),
-                                              child: Column(
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: [
-                                                  Container(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                          14,
-                                                        ),
-                                                    decoration: BoxDecoration(
-                                                      color: AppTheme
-                                                          .accentLimeColor
-                                                          .withValues(
-                                                            alpha: 0.14,
-                                                          ),
-                                                      shape: BoxShape.circle,
-                                                    ),
-                                                    child: Icon(
-                                                      state.totalFiltrosActivos >
-                                                              0
-                                                          ? Icons
-                                                                .filter_alt_off_rounded
-                                                          : Icons
-                                                                .sports_tennis_rounded,
-                                                      size: 38,
-                                                      color: AppTheme
-                                                          .accentLimeColor,
-                                                    ),
-                                                  ),
-                                                  const SizedBox(height: 16),
-                                                  Text(
-                                                    state.totalFiltrosActivos >
-                                                            0
-                                                        ? 'No hay partidos con estos filtros'
-                                                        : 'No hay partidos disponibles',
-                                                    textAlign: TextAlign.center,
-                                                    style: const TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 16,
-                                                      fontWeight:
-                                                          FontWeight.w800,
-                                                    ),
-                                                  ),
-                                                  const SizedBox(height: 8),
-                                                  Text(
-                                                    state.totalFiltrosActivos >
-                                                            0
-                                                        ? 'No encontramos partidos disponibles con esos filtros. Probá cambiando los filtros o limpiando la selección.'
-                                                        : 'Tus partidos confirmados están en "Mis Partidos".\nPodés armar una nueva cancha con el botón (+).',
-                                                    textAlign: TextAlign.center,
-                                                    style: const TextStyle(
-                                                      color: Color(0xFF8E9A93),
-                                                      fontSize: 13,
-                                                      height: 1.4,
-                                                    ),
-                                                  ),
-                                                  const SizedBox(height: 18),
-                                                  if (state
-                                                          .totalFiltrosActivos >
-                                                      0)
-                                                    OutlinedButton.icon(
-                                                      onPressed: () {
-                                                        context
-                                                            .read<MatchesBloc>()
-                                                            .add(
-                                                              const LoadMatchesAction(),
-                                                            );
-                                                      },
-                                                      style: OutlinedButton.styleFrom(
-                                                        backgroundColor:
-                                                            AppTheme
-                                                                .accentLimeColor
-                                                                .withValues(
-                                                                  alpha: 0.12,
-                                                                ),
-                                                        side: const BorderSide(
-                                                          color: AppTheme
-                                                              .accentLimeColor,
-                                                          width: 1.2,
-                                                        ),
-                                                        shape: RoundedRectangleBorder(
-                                                          borderRadius:
-                                                              BorderRadius.circular(
-                                                                12,
-                                                              ),
-                                                        ),
-                                                        padding:
-                                                            const EdgeInsets.symmetric(
-                                                              horizontal: 16,
-                                                              vertical: 10,
-                                                            ),
-                                                      ),
-                                                      icon: const Icon(
-                                                        Icons.refresh_rounded,
-                                                        size: 16,
-                                                        color: AppTheme
-                                                            .accentLimeColor,
-                                                      ),
-                                                      label: const Text(
-                                                        'Limpiar filtros',
-                                                        style: TextStyle(
-                                                          color: AppTheme
-                                                              .accentLimeColor,
-                                                          fontWeight:
-                                                              FontWeight.w700,
-                                                          fontSize: 13,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      )
-                                    : ListView.separated(
-                                        physics:
-                                            const AlwaysScrollableScrollPhysics(),
-                                        padding: const EdgeInsets.only(
-                                          bottom: 120,
-                                        ),
-                                        itemCount: partidosDisponibles.length,
-                                        separatorBuilder: (_, _) =>
-                                            const SizedBox(height: 14),
-                                        itemBuilder: (context, index) {
-                                          final partido =
-                                              partidosDisponibles[index];
-                                          return PartidoCard(
-                                            partido: partido,
-                                            directorioJugadores: profileState
-                                                .directorioJugadores,
-                                            onTap: () {
-                                              Navigator.of(context).push(
-                                                SmokePageRoute(
-                                                  child: MatchDetailScreen(
-                                                    partidoId: partido.id,
-                                                  ),
-                                                ),
-                                              );
-                                            },
-                                          );
-                                        },
-                                      ),
-                              ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+          body: LayoutBuilder(
+            builder: (context, constraints) {
+              final double availableWidth = constraints.maxWidth;
+              const double headerHeight = 52.0;
+              final double listTop = topPadding + 34 + headerHeight + 14;
+              const double listLeft = 20.0;
+              final double listWidth = availableWidth - 40.0;
 
-              Positioned.fill(
-                child: AnimatedBuilder(
-                  animation: _exitAnimController,
-                  builder: (context, child) {
-                    return Offstage(
-                      offstage: _exitAnimController.value == 0.0,
-                      child: SlideTransition(
-                        position:
-                            Tween<Offset>(
-                              begin: const Offset(1.0, 0.0),
-                              end: Offset.zero,
-                            ).animate(
-                              CurvedAnimation(
-                                parent: _exitAnimController,
-                                curve: Curves.easeInOut,
+              final double mapTop = topPadding + 28.0;
+              const double mapWidth = 200.0;
+              final double mapLeft = (availableWidth - mapWidth) / 2;
+
+              return Stack(
+                children: [
+                  SafeArea(
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 34, 20, 0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SlideTransition(
+                            position: _headerSlideAnimation,
+                            child: _buildHeader(
+                              nombreUsuario,
+                              partidosDisponibles.length,
+                              state.totalFiltrosActivos,
+                            ),
+                          ),
+                          const SizedBox(height: 14),
+                          const SizedBox(height: 38),
+                          const SizedBox(height: 14),
+                          SlideTransition(
+                            position: _headerSlideAnimation,
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              physics: const AlwaysScrollableScrollPhysics(),
+                              child: Row(
+                                children: [
+                                  _buildDarkFilterChip(
+                                    label: 'Todos',
+                                    isSelected:
+                                        state.modalidadesFiltro.isEmpty &&
+                                        state.superficiesFiltro.isEmpty &&
+                                        state.nivelesFiltro.isEmpty,
+                                    onSelected: () {
+                                      context.read<MatchesBloc>().add(
+                                        LoadMatchesAction(
+                                          modalidadesFiltro: const [],
+                                          superficiesFiltro: const [],
+                                          nivelesFiltro: const [],
+                                          nivelUsuario: nivelUsuario,
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                  const SizedBox(width: 8),
+                                  _buildDarkFilterChip(
+                                    label: 'Singles',
+                                    isSelected: state.modalidadesFiltro
+                                        .contains('Singles'),
+                                    onSelected: () {
+                                      final activo = state.modalidadesFiltro
+                                          .contains('Singles');
+                                      context.read<MatchesBloc>().add(
+                                        LoadMatchesAction(
+                                          modalidadesFiltro: activo
+                                              ? const []
+                                              : const ['Singles'],
+                                          superficiesFiltro:
+                                              state.superficiesFiltro,
+                                          nivelesFiltro: state.nivelesFiltro,
+                                          nivelUsuario: nivelUsuario,
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                  const SizedBox(width: 8),
+                                  _buildDarkFilterChip(
+                                    label: 'Dobles',
+                                    isSelected: state.modalidadesFiltro
+                                        .contains('Dobles'),
+                                    onSelected: () {
+                                      final activo = state.modalidadesFiltro
+                                          .contains('Dobles');
+                                      context.read<MatchesBloc>().add(
+                                        LoadMatchesAction(
+                                          modalidadesFiltro: activo
+                                              ? const []
+                                              : const ['Dobles'],
+                                          superficiesFiltro:
+                                              state.superficiesFiltro,
+                                          nivelesFiltro: state.nivelesFiltro,
+                                          nivelUsuario: nivelUsuario,
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                  const SizedBox(width: 8),
+                                  _buildDarkFilterChip(
+                                    label: 'Polvo de ladrillo',
+                                    isSelected: state.superficiesFiltro
+                                        .contains('Polvo de ladrillo'),
+                                    onSelected: () {
+                                      final activo = state.superficiesFiltro
+                                          .contains('Polvo de ladrillo');
+                                      context.read<MatchesBloc>().add(
+                                        LoadMatchesAction(
+                                          modalidadesFiltro:
+                                              state.modalidadesFiltro,
+                                          superficiesFiltro: activo
+                                              ? const []
+                                              : const ['Polvo de ladrillo'],
+                                          nivelesFiltro: state.nivelesFiltro,
+                                          nivelUsuario: nivelUsuario,
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                  const SizedBox(width: 8),
+                                  _buildDarkFilterChip(
+                                    label: 'Cemento',
+                                    isSelected: state.superficiesFiltro
+                                        .contains('Cemento'),
+                                    onSelected: () {
+                                      final activo = state.superficiesFiltro
+                                          .contains('Cemento');
+                                      context.read<MatchesBloc>().add(
+                                        LoadMatchesAction(
+                                          modalidadesFiltro:
+                                              state.modalidadesFiltro,
+                                          superficiesFiltro: activo
+                                              ? const []
+                                              : const ['Cemento'],
+                                          nivelesFiltro: state.nivelesFiltro,
+                                          nivelUsuario: nivelUsuario,
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                  const SizedBox(width: 8),
+                                  _buildDarkFilterChip(
+                                    label: 'Césped',
+                                    isSelected: state.superficiesFiltro
+                                        .contains('Césped'),
+                                    onSelected: () {
+                                      final activo = state.superficiesFiltro
+                                          .contains('Césped');
+                                      context.read<MatchesBloc>().add(
+                                        LoadMatchesAction(
+                                          modalidadesFiltro:
+                                              state.modalidadesFiltro,
+                                          superficiesFiltro: activo
+                                              ? const []
+                                              : const ['Césped'],
+                                          nivelesFiltro: state.nivelesFiltro,
+                                          nivelUsuario: nivelUsuario,
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ],
                               ),
                             ),
-                        child: child,
+                          ),
+                          const SizedBox(height: 16),
+                          SlideTransition(
+                            position: _headerSlideAnimation,
+                            child: _buildSectionHeader(
+                              partidosDisponibles.length,
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          // Lista de Partidos con Pull to Refresh
+                          Expanded(
+                            child: state.isLoadingFeed
+                                ? const Center(
+                                    child: CircularProgressIndicator(
+                                      color: AppTheme.accentLimeColor,
+                                    ),
+                                  )
+                                : RefreshIndicator(
+                                    color: AppTheme.accentLimeColor,
+                                    backgroundColor: const Color(0xFF161E1A),
+                                    onRefresh: () async {
+                                      context.read<MatchesBloc>().add(
+                                        LoadMatchesAction(
+                                          modalidadesFiltro:
+                                              state.modalidadesFiltro,
+                                          superficiesFiltro:
+                                              state.superficiesFiltro,
+                                          nivelesFiltro: state.nivelesFiltro,
+                                          nivelUsuario: nivelUsuario,
+                                        ),
+                                      );
+                                    },
+                                    child: partidosDisponibles.isEmpty
+                                        ? ListView(
+                                            physics:
+                                                const AlwaysScrollableScrollPhysics(),
+                                            padding: const EdgeInsets.only(
+                                              top: 40,
+                                              bottom: 120,
+                                            ),
+                                            children: [
+                                              Center(
+                                                child: Container(
+                                                  margin:
+                                                      const EdgeInsets.symmetric(
+                                                        horizontal: 16,
+                                                      ),
+                                                  padding:
+                                                      const EdgeInsets.symmetric(
+                                                        horizontal: 24,
+                                                        vertical: 32,
+                                                      ),
+                                                  decoration: BoxDecoration(
+                                                    color: const Color(
+                                                      0xFF161E1A,
+                                                    ),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          20,
+                                                        ),
+                                                    border: Border.all(
+                                                      color: Colors.white
+                                                          .withValues(
+                                                            alpha: 0.1,
+                                                          ),
+                                                      width: 1.2,
+                                                    ),
+                                                  ),
+                                                  child: Column(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: [
+                                                      Container(
+                                                        padding:
+                                                            const EdgeInsets.all(
+                                                              14,
+                                                            ),
+                                                        decoration: BoxDecoration(
+                                                          color: AppTheme
+                                                              .accentLimeColor
+                                                              .withValues(
+                                                                alpha: 0.14,
+                                                              ),
+                                                          shape:
+                                                              BoxShape.circle,
+                                                        ),
+                                                        child: Icon(
+                                                          state.totalFiltrosActivos >
+                                                                  0
+                                                              ? Icons
+                                                                    .filter_alt_off_rounded
+                                                              : Icons
+                                                                    .sports_tennis_rounded,
+                                                          size: 38,
+                                                          color: AppTheme
+                                                              .accentLimeColor,
+                                                        ),
+                                                      ),
+                                                      const SizedBox(
+                                                        height: 16,
+                                                      ),
+                                                      Text(
+                                                        state.totalFiltrosActivos >
+                                                                0
+                                                            ? 'No hay partidos con estos filtros'
+                                                            : 'No hay partidos disponibles',
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                        style: const TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: 16,
+                                                          fontWeight:
+                                                              FontWeight.w800,
+                                                        ),
+                                                      ),
+                                                      const SizedBox(height: 8),
+                                                      Text(
+                                                        state.totalFiltrosActivos >
+                                                                0
+                                                            ? 'No encontramos partidos disponibles con esos filtros. Probá cambiando los filtros o limpiando la selección.'
+                                                            : 'Tus partidos confirmados están en "Mis Partidos".\nPodés armar una nueva cancha con el botón (+).',
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                        style: const TextStyle(
+                                                          color: Color(
+                                                            0xFF8E9A93,
+                                                          ),
+                                                          fontSize: 13,
+                                                          height: 1.4,
+                                                        ),
+                                                      ),
+                                                      const SizedBox(
+                                                        height: 18,
+                                                      ),
+                                                      if (state
+                                                              .totalFiltrosActivos >
+                                                          0)
+                                                        OutlinedButton.icon(
+                                                          onPressed: () {
+                                                            context
+                                                                .read<
+                                                                  MatchesBloc
+                                                                >()
+                                                                .add(
+                                                                  const LoadMatchesAction(),
+                                                                );
+                                                          },
+                                                          style: OutlinedButton.styleFrom(
+                                                            backgroundColor:
+                                                                AppTheme
+                                                                    .accentLimeColor
+                                                                    .withValues(
+                                                                      alpha:
+                                                                          0.12,
+                                                                    ),
+                                                            side: const BorderSide(
+                                                              color: AppTheme
+                                                                  .accentLimeColor,
+                                                              width: 1.2,
+                                                            ),
+                                                            shape: RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius.circular(
+                                                                    12,
+                                                                  ),
+                                                            ),
+                                                            padding:
+                                                                const EdgeInsets.symmetric(
+                                                                  horizontal:
+                                                                      16,
+                                                                  vertical: 10,
+                                                                ),
+                                                          ),
+                                                          icon: const Icon(
+                                                            Icons
+                                                                .refresh_rounded,
+                                                            size: 16,
+                                                            color: AppTheme
+                                                                .accentLimeColor,
+                                                          ),
+                                                          label: const Text(
+                                                            'Limpiar filtros',
+                                                            style: TextStyle(
+                                                              color: AppTheme
+                                                                  .accentLimeColor,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w700,
+                                                              fontSize: 13,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          )
+                                        : ListView.separated(
+                                            physics:
+                                                const AlwaysScrollableScrollPhysics(),
+                                            padding: const EdgeInsets.only(
+                                              bottom: 120,
+                                            ),
+                                            itemCount:
+                                                partidosDisponibles.length,
+                                            separatorBuilder: (_, _) =>
+                                                const SizedBox(height: 14),
+                                            itemBuilder: (context, index) {
+                                              final partido =
+                                                  partidosDisponibles[index];
+                                              return PartidoCard(
+                                                partido: partido,
+                                                directorioJugadores:
+                                                    profileState
+                                                        .directorioJugadores,
+                                                onTap: () {
+                                                  Navigator.of(context).push(
+                                                    SmokePageRoute(
+                                                      child: MatchDetailScreen(
+                                                        partidoId: partido.id,
+                                                      ),
+                                                    ),
+                                                  );
+                                                },
+                                              );
+                                            },
+                                          ),
+                                  ),
+                          ),
+                        ],
                       ),
-                    );
-                  },
-                  child: MapFeedScreen(onToggle: (val) => _toggleMap()),
-                ),
-              ),
+                    ),
+                  ),
 
-              // Píldora flotante interpolada (Lista | Mapa)
-              AnimatedBuilder(
-                animation: _exitAnimController,
-                builder: (context, child) {
-                  final double t = _exitAnimController.value;
-                  final double curTop = listTop + (mapTop - listTop) * t;
-                  final double curLeft = listLeft + (mapLeft - listLeft) * t;
-                  final double curWidth =
-                      listWidth + (mapWidth - listWidth) * t;
+                  Positioned.fill(
+                    child: AnimatedBuilder(
+                      animation: _exitAnimController,
+                      builder: (context, child) {
+                        return Offstage(
+                          offstage: _exitAnimController.value == 0.0,
+                          child: SlideTransition(
+                            position:
+                                Tween<Offset>(
+                                  begin: const Offset(1.0, 0.0),
+                                  end: Offset.zero,
+                                ).animate(
+                                  CurvedAnimation(
+                                    parent: _exitAnimController,
+                                    curve: Curves.easeInOut,
+                                  ),
+                                ),
+                            child: child,
+                          ),
+                        );
+                      },
+                      child: MapFeedScreen(onToggle: (val) => _toggleMap()),
+                    ),
+                  ),
 
-                  return Positioned(
-                    top: curTop,
-                    left: curLeft,
-                    width: curWidth,
-                    height: 38,
-                    child: _buildFloatingPillBody(),
-                  );
-                },
-              ),
-            ],
+                  // Píldora flotante interpolada (Lista | Mapa)
+                  AnimatedBuilder(
+                    animation: _exitAnimController,
+                    builder: (context, child) {
+                      final double t = _exitAnimController.value;
+                      final double curTop = listTop + (mapTop - listTop) * t;
+                      final double curLeft =
+                          listLeft + (mapLeft - listLeft) * t;
+                      final double curWidth =
+                          listWidth + (mapWidth - listWidth) * t;
+
+                      return Positioned(
+                        top: curTop,
+                        left: curLeft,
+                        width: curWidth,
+                        height: 38,
+                        child: _buildFloatingPillBody(),
+                      );
+                    },
+                  ),
+                ],
+              );
+            },
           ),
         );
       },

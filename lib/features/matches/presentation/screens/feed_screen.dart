@@ -453,13 +453,15 @@ class FeedScreenState extends State<FeedScreen>
                                     isSelected:
                                         state.modalidadesFiltro.isEmpty &&
                                         state.superficiesFiltro.isEmpty &&
-                                        state.nivelesFiltro.isEmpty,
+                                        state.nivelesFiltro.isEmpty &&
+                                        state.radioKm == 10.0,
                                     onSelected: () {
                                       context.read<MatchesBloc>().add(
                                         LoadMatchesAction(
                                           modalidadesFiltro: const [],
                                           superficiesFiltro: const [],
                                           nivelesFiltro: const [],
+                                          radioFiltroKm: 10.0,
                                           nivelUsuario: nivelUsuario,
                                         ),
                                       );

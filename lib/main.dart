@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'core/constants/app_constants.dart';
 import 'core/theme/app_theme.dart';
 import 'core/utils/date_formatter.dart';
+import 'core/widgets/desktop_showcase_wrapper.dart';
 import 'features/chat/data/repositories/local_chat_repository.dart';
 import 'features/chat/presentation/bloc/chat_bloc.dart';
 import 'features/matches/data/repositories/local_matches_repository.dart';
@@ -70,17 +71,8 @@ class _TenisAppState extends State<TenisApp> {
         debugShowCheckedModeBanner: false,
         theme: AppTheme.lightTheme,
         scrollBehavior: const AppScrollBehavior(),
-        builder: (context, child) {
-          return Container(
-            color: const Color(0xFF131A17),
-            child: Center(
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 460),
-                child: ClipRect(child: child ?? const SizedBox()),
-              ),
-            ),
-          );
-        },
+        builder: (context, child) =>
+            DesktopShowcaseWrapper(child: child ?? const SizedBox()),
         home: _onboardingCompletado
             ? const HomeShellScreen()
             : WelcomeScreen(

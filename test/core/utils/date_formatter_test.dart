@@ -1,6 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tenis_app/core/utils/date_formatter.dart';
 
+// Resilient unit tests for the custom date formatter.
+// Ensures deterministic formatting ("Today, HH:mm", "Tomorrow", zero-padded times, short dates)
+// without external intl dependencies or LocaleDataException crashes on web and production.
 void main() {
   group('AppDateFormatter Resilient Unit Tests', () {
     test('mesDiaLateral formatea correctamente meses y días', () {

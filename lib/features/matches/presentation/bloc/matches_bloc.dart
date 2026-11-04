@@ -6,7 +6,8 @@ import '../../domain/usecases/calcular_relevancia_partido.dart';
 import 'matches_actions.dart';
 import 'matches_state.dart';
 
-/// BLoC encargado de la gestión de partidos, filtros de búsqueda y concurrencia de cupos.
+// Central BLoC managing match discovery, multi-criteria filtering, and organizer actions.
+// Handles feed sorting by relevance, search radius clamping, slot reservation, and match updates/cancellation.
 class MatchesBloc extends Bloc<MatchesAction, MatchesState> {
   final MatchesRepository repo;
   final CalcularRelevanciaPartido calcularRelevancia;

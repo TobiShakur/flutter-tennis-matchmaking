@@ -4,7 +4,8 @@ import '../../domain/repositories/chat_repository.dart';
 import 'chat_actions.dart';
 import 'chat_state.dart';
 
-// EL CEREBRO DEL CHAT Y MODERACIÓN UGC (ChatBloc)
+// Manages real-time match chat state and UGC safety rules.
+// Handles message loading, sending, own message deletion, and user blocking/unblocking.
 class ChatBloc extends Bloc<ChatAction, ChatState> {
   final ChatRepository repo;
 

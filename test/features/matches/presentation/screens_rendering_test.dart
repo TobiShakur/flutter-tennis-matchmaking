@@ -17,6 +17,9 @@ import 'package:tenis_app/features/profile/presentation/screens/edit_profile_scr
 import 'package:tenis_app/features/profile/presentation/screens/mi_cuenta_screen.dart';
 import 'package:tenis_app/features/profile/presentation/screens/perfil_jugador_screen.dart';
 
+// End-to-end screen rendering tests with mock BLoC providers.
+// Verifies MyMatches, MatchDetail, Profile, and Edit screens mount cleanly without layout
+// overflows, court surface color tokens resolve accurately, and filter getters compute properly.
 class MockMatchesRepository extends Mock implements MatchesRepository {}
 
 class MockProfileRepository extends Mock implements ProfileRepository {}

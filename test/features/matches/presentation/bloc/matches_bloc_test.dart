@@ -8,6 +8,9 @@ import 'package:tenis_app/features/matches/presentation/bloc/matches_actions.dar
 import 'package:tenis_app/features/matches/presentation/bloc/matches_bloc.dart';
 import 'package:tenis_app/features/matches/presentation/bloc/matches_state.dart';
 
+// Unit tests for the core MatchesBloc state machine.
+// Tests feed loading with relevance sorting, strict typed domain error handling
+// (MatchErrorCanchaCompleta when full), and state consistency on match updates and cancellations.
 class MockMatchesRepository extends Mock implements MatchesRepository {}
 
 void main() {

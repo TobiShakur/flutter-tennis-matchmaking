@@ -7,6 +7,9 @@ import 'package:tenis_app/features/chat/presentation/bloc/chat_actions.dart';
 import 'package:tenis_app/features/chat/presentation/bloc/chat_bloc.dart';
 import 'package:tenis_app/features/chat/presentation/bloc/chat_state.dart';
 
+// Unit tests for ChatBloc and User-Generated Content (UGC) safety rules.
+// Verifies real-time deletion of own messages and instant redaction/filtering
+// of blocked user messages from the chat state.
 class MockChatRepository extends Mock implements ChatRepository {}
 
 void main() {

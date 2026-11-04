@@ -4,142 +4,128 @@
 [![Dart](https://img.shields.io/badge/Dart-3.x-0175C2?logo=dart&logoColor=white)](https://dart.dev)
 [![Architecture](https://img.shields.io/badge/Architecture-Clean%20Architecture-4CAF50)](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
 [![State Management](https://img.shields.io/badge/State-flutter__bloc%208.1-blueviolet)](https://bloclibrary.dev)
-[![Tests](https://img.shields.io/badge/Tests-24%20Passing-brightgreen)](#-testing--quality-assurance)
+[![Tests](https://img.shields.io/badge/Tests-24%20Passing-brightgreen)](#-testing--code-quality)
 [![CI/CD](https://img.shields.io/badge/CI%2FCD-GitHub%20Actions-2088FF?logo=github-actions&logoColor=white)](.github/workflows/deploy.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-> **SetPoint** es una aplicación móvil moderna desarrollada en Flutter y Dart 3 para conectar tenistas amateur y competitivos en la Ciudad de Buenos Aires. Diseñada bajo principios estrictos de **Clean Architecture**, **BLoC Pattern (Action-Based)** y un **Design System Dark Glassmorphism** de alto impacto visual.
+> A production-grade mobile tennis matchmaking and court booking platform for Buenos Aires players, built with **Flutter**, **Dart 3**, **Clean Architecture**, **BLoC (Action-Based)**, and a custom **Dark Glassmorphism** design system.
 
 ---
 
-## 🚀 Live Demo en la Web
+## 🚀 Live Interactive Demo
 
-Podés probar la aplicación directamente desde tu navegador en GitHub Pages:
+Test the live application directly in your browser:
 
-🔗 **[Ver Demo en Vivo (Web)](https://tobishakur.github.io/flutter-tennis-matchmaking/)**
+🔗 **[Launch SetPoint Live Web Demo](https://tobishakur.github.io/flutter-tennis-matchmaking/)**
 
-> 💡 *En navegadores de escritorio, la aplicación renderiza en un contenedor adaptativo centrado (`max-width: 460px`) simulando la experiencia móvil nativa con scroll elástico táctil.*
-
----
-
-## ✨ Features Destacadas
-
-### 1. 🏟️ Visualizador Táctico de Cancha
-- Renderizado interactivo de formación de equipos en cancha (1v1 Singles y 2v2 Dobles).
-- 3 variantes cromáticas y temáticas dinámicas según la superficie real:
-  - **Polvo de ladrillo** (Rojo arcilla terroso)
-  - **Cemento / Hard Court** (Azul deep court)
-  - **Césped** (Verde pasto vibrante)
-- Panel de administración exclusivo para el creador del partido (edición completa y cancelación/borrado).
-
-### 2. 🔍 Sistema de Filtrado Multi-Criterio en Tiempo Real
-- Filtrado ortogonal e instantáneo por:
-  - **Modalidad**: Singles (2J) o Dobles (4J).
-  - **Superficie**: Polvo de ladrillo, Cemento, Césped.
-  - **Nivel del Jugador**: Principiante, Básico, Intermedio, Avanzado, Experto (con selección múltiple inteligente y agrupación automática de "Todos").
-  - **Radio de Búsqueda**: Slider continuo con resolución de 1 km (de 5 km a 20 km) y quick-chips de acceso rápido.
-- Insignia reactiva con el conteo de filtros activos en AppBar y botones con micro-feedback háptico.
-
-### 3. 🗺️ Mapa Interactivo & Smart Clustering
-- Integración con OpenStreetMap vía `flutter_map` y `latlong2`.
-- Agrupamiento inteligente de partidos por proximidad con conteo visual en chip neón.
-- Animación fluida de zoom (`fly-to`) al seleccionar canchas o clusters individuales.
-- Selector interactivo de ubicación al crear partidos con sincronización bidireccional de coordenadas y geocodificación descriptiva.
-
-### 4. 💬 Chat Grupal & Moderación UGC (App Store Compliance)
-- Sala de chat dedicada para cada partido con acceso restringido únicamente a participantes confirmados.
-- Suite de seguridad y moderación en cumplimiento con las guías de Apple App Store / Google Play:
-  - Eliminación de mensajes propios.
-  - Reporte de contenido inapropiado con clasificación contextual.
-  - Bloqueo de usuarios ofensivos con redacción y filtrado en tiempo real en todo el feed y chat.
-  - Pantalla de gestión y desbloqueo de usuarios bloqueados.
-
-### 5. 🛡️ Resiliencia Offline y Cero Mantenimiento
-- Repositorio mock en memoria con simulación de latencia realista (200-500ms).
-- **Cero costo operativo:** No requiere facturación de Firebase ni claves de API pagas. La experiencia completa es 100% autónoma y funcional lista para evaluar.
-- Formateador de fechas resiliente (`AppDateFormatter`) independiente de paquetes con dependencias locales rotas (`LocaleDataException`).
+> 💡 *On desktop browsers, the app renders in an adaptive responsive frame alongside a developer showcase card, simulating the exact touch experience and proportions of a mobile device.*
 
 ---
 
-## 🏛️ Arquitectura & Buenas Prácticas
+## 🎯 The Problem & The Solution
 
-El proyecto sigue una estructura estricta de **Clean Architecture** combinada con **BLoC (Action-based)**:
+- **The Problem:** Organizing tennis matches is notoriously painful. Players waste time coordinating across messaging apps, dealing with mismatched skill levels, incompatible court surfaces, and last-minute dropouts without a reliable queue or moderation system.
+- **The Solution:** SetPoint streamlines match discovery into a real-time, location-aware experience. Players can filter games within a 5–20 km radius, match by verified skill level, choose between Clay, Hard, or Grass courts, visualize tactical team formations, and communicate in dedicated match chat rooms.
+
+---
+
+## 🏛️ Architecture & Data Flow
+
+The project strictly follows **Clean Architecture** combined with **Action-Based BLoC State Management** to enforce unidirectional data flow, separation of concerns, and high testability:
 
 ```mermaid
-flowchart TD
+flowchart LR
     subgraph Presentation["🎨 Presentation Layer"]
-        UI[Screens & Glassmorphic Widgets]
-        BLoC[BLoC State Management]
-        Actions[Action-Based Events]
-        States[Immutable States / Equatable]
-        UI -->|Dispatches| Actions
-        Actions -->|Triggers| BLoC
-        BLoC -->|Emits| States
-        States -->|Renders| UI
+        UI["UI Screens & Widgets"]
+        BLoC["BLoC State Machines"]
+        UI -->|Dispatches Actions| BLoC
+        BLoC -->|Emits States| UI
     end
 
-    subgraph Domain["🧠 Domain Layer (Core Business Rules)"]
-        Entities[Domain Entities]
-        UseCases[Use Cases / Business Logic]
-        RepoContracts[Repository Contracts / Interfaces]
-        SealedErrors[Sealed Class MatchError]
+    subgraph Domain["🧠 Domain Layer (Core Logic)"]
+        UseCases["Domain Use Cases"]
+        Entities["Entities & Value Objects"]
+        Contracts["Repository Contracts"]
+        Errors["Sealed MatchErrors"]
         BLoC -->|Executes| UseCases
-        UseCases -->|Interacts with| RepoContracts
-        UseCases -->|Yields| Entities
+        UseCases -->|Interacts with| Contracts
+        Contracts -.->|Returns| Entities
     end
 
-    subgraph Data["💾 Data Layer (Data Sources & Mappers)"]
-        RepoImpl[Repository Implementations]
-        DTOs[Data Transfer Objects / Models]
-        Mappers[Entity <-> DTO Mappers]
-        DataSources[In-Memory Mock / Local Storage]
-        RepoContracts -.->|Implemented by| RepoImpl
-        RepoImpl -->|Converts with| Mappers
-        Mappers -->|Serializes/Deserializes| DTOs
-        RepoImpl -->|Queries/Updates| DataSources
+    subgraph Data["💾 Data Layer (Storage & DTOs)"]
+        RepoImpl["Repository Implementations"]
+        Mappers["Entity <-> DTO Mappers"]
+        DataSources["In-Memory Mock Stores"]
+        Contracts -.->|Implemented by| RepoImpl
+        RepoImpl -->|Converts via| Mappers
+        RepoImpl -->|Reads & Writes| DataSources
     end
 ```
 
-### Principios Clave Aplicados
-- **Dart 3 Strict Typing:** Uso extensivo de `sealed class` para jerarquías de error (`MatchError`), `pattern matching` y records.
-- **Inversión de Dependencias (DIP):** Los BLoCs y Casos de Uso dependen exclusivamente de abstracciones (`Repository Contracts`), nunca de implementaciones concretas.
-- **Inmutabilidad Absoluta:** Estados y entidades modelados con `Equatable` y métodos `copyWith`.
-- **Desacoplamiento de Sesión:** `AppConstants.currentUserId` totalmente separado de la capa de presentación y del tema visual (`AppTheme`).
+### Architectural Pillars
+- **Strict Dart 3 Typing:** Domain error hierarchies modeled as `sealed class MatchError extends Equatable` with exhaustive pattern matching.
+- **Dependency Inversion (DIP):** Presentation and Domain depend only on abstract repository contracts, never on concrete implementations.
+- **Deterministic Offline Resilience:** In-memory mock repositories with realistic simulated network latency (200–500ms) and zero paid cloud API dependencies.
+- **Session Decoupling:** Global user identity (`AppConstants.currentUserId`) is isolated from theme design tokens and presentation widgets.
 
 ---
 
-## 📂 Estructura del Proyecto
+## ✨ Key Engineering Features
 
-El árbol de directorios refleja el diseño en capas y cuenta con una suite de pruebas en espejo:
+1. **🏟️ Tactical Court Formation Visualizer:**
+   - Real-time team visualization for 1v1 Singles and 2v2 Doubles.
+   - Dynamic court themes adjusting palette and textures based on actual surface:
+     - **Clay / Polvo de ladrillo** (Earthy brick red)
+     - **Hard / Cemento** (Deep tournament blue)
+     - **Grass / Césped** (Vibrant lawn green)
+   - Organizer controls for match editing and instant cancellation.
+
+2. **🔍 Multi-Criteria Real-Time Filtering:**
+   - Orthogonal filters for game mode, court surface, 5-tier player levels, and search radius slider (5 km – 20 km with 1 km precision).
+   - "All" quick-chip resets all categories and snaps radius back to the 10 km baseline.
+   - Reactive badge counter on AppBar displaying total active criteria.
+
+3. **🗺️ Interactive Map & Viewport Clustering:**
+   - OpenStreetMap integration via `flutter_map` and `latlong2`.
+   - Proximity clustering with smooth fly-to zoom animations and zero coordinate jitter.
+   - Interactive location picker with reverse coordinate mapping for creating matches.
+
+4. **💬 Match Chat & UGC Safety (App Store Compliance):**
+   - Access-controlled chat rooms limited to joined match participants.
+   - Real-time UGC moderation: own-message deletion, content reporting modal, user blocking, and instant message redaction across the app.
+   - Dedicated management screen to review and unblock users.
+
+5. **🛡️ Resilient Date Formatter:**
+   - Custom formatting engine (`AppDateFormatter`) delivering clean localized outputs ("Today, HH:mm", "Tomorrow", short dates) with zero risk of web `LocaleDataException` crashes.
+
+---
+
+## 📂 Project Structure
+
+Mirrored clean architecture layout between production code and the test suite:
 
 ```
 tenis_app/
-├── .github/
-│   └── workflows/
-│       └── deploy.yml             # Pipeline CI/CD GitHub Pages
-├── assets/
-│   └── images/
-│       ├── icons/                 # Iconos SVG y branding
-│       └── stock/                 # Imágenes de alta resolución de tenis
+├── .github/workflows/deploy.yml       # Automated CI/CD GitHub Pages workflow
+├── assets/images/
+│   ├── icons/                         # SVG vectors and branding assets
+│   └── stock/                         # High-res tennis imagery
 ├── lib/
 │   ├── core/
-│   │   ├── animations/            # Smoke page transitions
-│   │   ├── constants/             # AppConstants (userId, defaults)
-│   │   ├── theme/                 # AppTheme (Dark Glassmorphism)
-│   │   └── utils/                 # AppDateFormatter (Zero-exception)
+│   │   ├── constants/app_constants.dart
+│   │   ├── theme/app_theme.dart       # Dark Glassmorphism design tokens
+│   │   ├── utils/date_formatter.dart  # Resilient date engine
+│   │   └── widgets/desktop_showcase_wrapper.dart
 │   ├── features/
-│   │   ├── chat/                  # BLoC, Data & Domain de mensajería y UGC
-│   │   ├── matches/               # Core de partidos, filtros, mapa y cancha
-│   │   ├── onboarding/            # Flujo de bienvenida y carrusel
-│   │   └── profile/               # Perfiles, estadísticas y bloqueo de usuarios
-│   └── main.dart                  # Entry point con responsive container
+│   │   ├── chat/                      # Chat domain, data & BLoC with UGC
+│   │   ├── matches/                   # Matches, tactical court, filters & map
+│   │   ├── onboarding/                # Carousel and welcome flow
+│   │   └── profile/                   # Player profile, stats & user blocking
+│   └── main.dart                      # Application entry point
 └── test/
-    ├── core/
-    │   └── utils/
-    │       └── date_formatter_test.dart
+    ├── core/utils/date_formatter_test.dart
     └── features/
-        ├── chat/
-        │   └── presentation/bloc/chat_bloc_test.dart
+        ├── chat/presentation/bloc/chat_bloc_test.dart
         └── matches/
             ├── domain/usecases/calcular_relevancia_partido_test.dart
             └── presentation/
@@ -149,82 +135,70 @@ tenis_app/
 
 ---
 
-## 🧪 Testing & Calidad de Código
+## 🧪 Testing & Code Quality
 
-El repositorio cuenta con una cobertura exhaustiva que abarca tests unitarios, de use cases, de BLoC con `bloc_test` y widget testing:
+The codebase includes comprehensive unit, domain use case, BLoC state, and widget rendering tests:
 
 ```bash
 flutter test
 ```
 
-### Resultados de la Suite (24/24 Passing)
-- ✅ **Date Formatter Tests**: Validación de formato relativo, 24 horas y prevención de `LocaleDataException`.
-- ✅ **Chat BLoC UGC Tests**: Borrado de mensajes, reporte y bloqueo reactivo de usuarios.
-- ✅ **Domain UseCase Tests**: Heurística de relevancia de partidos (`CalcularRelevanciaPartido`).
-- ✅ **Matches BLoC Tests**: Carga de feed, manejo de errores tipados (`MatchErrorCanchaCompleta`), actualización y cancelación.
-- ✅ **Widget Rendering Tests**: Integridad visual de pantallas críticas bajo MultiBlocProvider sin errores de layout ni overflow.
+### Test Suite Summary (24/24 Passing)
+- ✅ **Date Formatter Tests**: Validates relative dates, 24-hour formats, zero-padding, and crash resilience.
+- ✅ **Chat BLoC UGC Tests**: Validates message deletion, report flow, and immediate user blocking redaction.
+- ✅ **Domain Use Case Tests**: Validates heuristic match relevance calculations (`CalcularRelevanciaPartido`).
+- ✅ **Matches BLoC Tests**: Validates sorted feed emissions, `MatchErrorCanchaCompleta` typed error handling, and organizer updates.
+- ✅ **Widget Rendering Tests**: Verifies core screens (MyMatches, MatchDetail, Profile, Edit) render without layout overflows under MultiBlocProvider.
 
 ---
 
-## 🛠️ Instalación y Ejecución Local
+## 🛠️ Local Development
 
-### Prerrequisitos
-- [Flutter SDK](https://docs.flutter.dev/get-started/install) (v3.22.0 o superior)
-- Dart SDK (v3.4.0 o superior)
+### Prerequisites
+- [Flutter SDK](https://docs.flutter.dev/get-started/install) (v3.22.0 or higher)
+- Dart SDK (v3.4.0 or higher)
 
-### Pasos
-1. **Clonar el repositorio:**
-   ```bash
-   git clone https://github.com/TobiShakur/flutter-tennis-matchmaking.git
-   cd flutter-tennis-matchmaking
-   ```
+### Setup & Run
+```bash
+# 1. Clone repository
+git clone https://github.com/TobiShakur/flutter-tennis-matchmaking.git
+cd flutter-tennis-matchmaking
 
-2. **Instalar dependencias:**
-   ```bash
-   flutter pub get
-   ```
+# 2. Install dependencies
+flutter pub get
 
-3. **Verificar calidad de código:**
-   ```bash
-   dart format --output=none --set-exit-if-changed .
-   flutter analyze
-   flutter test
-   ```
+# 3. Verify code quality & tests
+dart format --output=none --set-exit-if-changed .
+flutter analyze
+flutter test
 
-4. **Ejecutar en tu dispositivo o emulador:**
-   ```bash
-   # En navegador Chrome
-   flutter run -d chrome
-
-   # En dispositivo Android o iOS
-   flutter run
-   ```
-
-5. **Compilar para producción Web:**
-   ```bash
-   flutter build web --release --base-href "/flutter-tennis-matchmaking/"
-   ```
+# 4. Launch on Chrome or connected device
+flutter run -d chrome
+```
 
 ---
 
-## 🤖 CI/CD Automatizado
+## 🤖 CI/CD Pipeline
 
-El proyecto incluye un pipeline automatizado con **GitHub Actions** (`.github/workflows/deploy.yml`):
-- Se dispara en cada `push` a la rama `main`.
-- Ejecuta `dart format`, `flutter analyze` y `flutter test`.
-- Compila la versión web con `--base-href "/<repo-name>/"`.
-- Despliega automáticamente en **GitHub Pages** sin costo ni servidores externos.
-
----
-
-## 👤 Autor
-
-**Tobías Shakur** — *Mobile & Flutter Software Engineer*
-- Estudiante de Ingeniería en Informática (FIUBA).
-- Especializado en Flutter, Clean Architecture, BLoC y desarrollo de aplicaciones móviles de alto rendimiento.
+The project features a zero-cost automated GitHub Actions pipeline (`.github/workflows/deploy.yml`):
+1. Triggers on every push to `main`.
+2. Validates code formatting with `dart format`.
+3. Runs static analysis with `flutter analyze` (0 issues threshold).
+4. Executes the full test suite (`flutter test`).
+5. Builds the production release web bundle (`flutter build web --release`).
+6. Deploys automatically to **GitHub Pages**.
 
 ---
 
-## 📄 Licencia
+## 👤 Author
 
-Este proyecto está bajo la Licencia MIT. Consulta el archivo `LICENSE` para más detalles.
+**Tobías Gutiérrez** — *Mobile Software Engineer*
+- Computer Science & Engineering student at **FIUBA** (Facultad de Ingeniería, Universidad de Buenos Aires).
+- Specialized in Flutter, Clean Architecture, BLoC, and high-performance cross-platform mobile apps.
+- GitHub: [@TobiShakur](https://github.com/TobiShakur)
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.

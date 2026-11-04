@@ -2,6 +2,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:tenis_app/features/matches/domain/entities/partido_entity.dart';
 import 'package:tenis_app/features/matches/domain/usecases/calcular_relevancia_partido.dart';
 
+// Domain use case unit test for match relevance heuristics.
+// Ensures fully booked matches receive a 0 score, while prioritizing matches
+// matching player skill tier and proximity within Buenos Aires.
 void main() {
   final fechaBase = DateTime(2026, 11, 3, 18, 0);
 

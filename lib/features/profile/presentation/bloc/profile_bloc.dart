@@ -3,7 +3,8 @@ import '../../domain/repositories/profile_repository.dart';
 import 'profile_actions.dart';
 import 'profile_state.dart';
 
-// EL CEREBRO DE PERFILES E HISTORIAL (ProfileBloc)
+// Manages active player session state, user directories, and moderation settings.
+// Handles player profile editing (skill tier, dominant hand, court preference) and blocked user synchronization.
 class ProfileBloc extends Bloc<ProfileAction, ProfileState> {
   final ProfileRepository repo;
 

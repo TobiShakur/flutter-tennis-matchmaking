@@ -203,7 +203,7 @@ class DesktopShowcaseWrapper extends StatelessWidget {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      'Ingeniería en Informática — FIUBA',
+                      'Computer Science & Engineering — FIUBA',
                       style: TextStyle(
                         color: Colors.white.withValues(alpha: 0.5),
                         fontSize: 12,
@@ -219,7 +219,7 @@ class DesktopShowcaseWrapper extends StatelessWidget {
         const SizedBox(height: 22),
 
         const Text(
-          'Stack & Arquitectura',
+          'Stack & Architecture',
           style: TextStyle(
             color: Colors.white,
             fontSize: 14,
@@ -236,9 +236,9 @@ class DesktopShowcaseWrapper extends StatelessWidget {
             _buildTechChip('Clean Architecture'),
             _buildTechChip('BLoC 8.1 Pattern'),
             _buildTechChip('Dart 3 Strict Typing'),
-            _buildTechChip('24 Tests Unitarios & BLoC'),
+            _buildTechChip('24 Unit & BLoC Tests'),
             _buildTechChip('OpenStreetMap + Clustering'),
-            _buildTechChip('Dark Glassmorphism Design'),
+            _buildTechChip('Dark Glassmorphism UI'),
             _buildTechChip('100% Offline Resilient'),
           ],
         ),
@@ -262,7 +262,7 @@ class DesktopShowcaseWrapper extends StatelessWidget {
               const SizedBox(width: 10),
               Expanded(
                 child: Text(
-                  'El teléfono a la derecha es una demo interactiva funcional. Podés navegar, filtrar partidos, explorar el mapa y gestionar partidos.',
+                  'Interactive Live Demo: The phone device on the right is fully functional. Browse matches, toggle list/map views, apply multi-criteria filters, and create or manage matches.',
                   style: TextStyle(
                     color: Colors.white.withValues(alpha: 0.85),
                     fontSize: 13,

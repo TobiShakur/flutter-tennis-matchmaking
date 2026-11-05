@@ -22,6 +22,29 @@ Test the live application directly in your browser:
 
 ---
 
+## 📸 Visual Showcase & Screen Flow
+
+### Discovery & Real-Time Filtering
+| Welcome / Onboarding | Match Feed & Quick Chips | Multi-Criteria Filter Sheet |
+|:---:|:---:|:---:|
+| <img src="docs/screenshots/01_welcome.png" width="250" alt="Onboarding Welcome Screen" /> | <img src="docs/screenshots/02_feed.png" width="250" alt="Match Feed Screen" /> | <img src="docs/screenshots/03_filters.png" width="250" alt="Multi-Criteria Filter Sheet" /> |
+
+### Tactical Match Details & Formations
+| Tactical Court (Singles 1v1) | Tactical Court (Doubles 2v2) | Match Join & Roster Details |
+|:---:|:---:|:---:|
+| <img src="docs/screenshots/04_tactical_court_singles.png" width="250" alt="Tactical Court Singles" /> | <img src="docs/screenshots/05_tactical_court_doubles.png" width="250" alt="Tactical Court Doubles" /> | <img src="docs/screenshots/06_match_join.png" width="250" alt="Match Join Details" /> |
+
+### Map Clustering, Chat UGC & Player Profile
+| OpenStreetMap Overview | Proximity Map Zoom | Real-Time Chat & UGC Moderation |
+|:---:|:---:|:---:|
+| <img src="docs/screenshots/07_map_overview.png" width="250" alt="Map Overview" /> | <img src="docs/screenshots/08_map_zoom.png" width="250" alt="Map Zoomed In" /> | <img src="docs/screenshots/09_chat.png" width="250" alt="Match Chat" /> |
+
+| My Matches (Active & History) | Player Profile & Skill Pods |
+|:---:|:---:|
+| <img src="docs/screenshots/10_my_matches.png" width="250" alt="My Matches Screen" /> | <img src="docs/screenshots/11_profile.png" width="250" alt="Player Profile" /> |
+
+---
+
 ## 🎯 The Problem & The Solution
 
 - **The Problem:** Organizing tennis matches is notoriously painful. Players waste time coordinating across messaging apps, dealing with mismatched skill levels, incompatible court surfaces, and last-minute dropouts without a reliable queue or moderation system.
@@ -110,6 +133,7 @@ tenis_app/
 ├── assets/images/
 │   ├── icons/                         # SVG vectors and branding assets
 │   └── stock/                         # High-res tennis imagery
+├── docs/screenshots/                  # Visual walkthrough & gallery assets
 ├── lib/
 │   ├── core/
 │   │   ├── constants/app_constants.dart
@@ -195,7 +219,9 @@ The project features a zero-cost automated GitHub Actions pipeline (`.github/wor
 **Tobías Gutiérrez** — *Mobile Software Engineer*
 - Computer Science & Engineering student at **FIUBA** (Facultad de Ingeniería, Universidad de Buenos Aires).
 - Specialized in Flutter, Clean Architecture, BLoC, and high-performance cross-platform mobile apps.
-- GitHub: [@TobiShakur](https://github.com/TobiShakur)
+- **GitHub:** [@TobiShakur](https://github.com/TobiShakur)
+- **LinkedIn:** [Tobías Gutiérrez](https://www.linkedin.com/in/tobias-gutierrez-reboredo-991084279/)
+- **Email:** [tobigutierrez26@gmail.com](mailto:tobigutierrez26@gmail.com)
 
 ---
 

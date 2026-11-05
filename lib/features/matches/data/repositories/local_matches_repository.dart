@@ -320,6 +320,57 @@ class LocalMatchesRepository implements MatchesRepository {
         'lng': -58.6300,
         'status': 'missingPlayer',
       },
+      {
+        'id': 'match_09',
+        'title': 'Singles Nocturno en Palermo',
+        'modalidad': 'Singles',
+        'superficie': 'Polvo de ladrillo',
+        'level': 'Intermedio',
+        'organizerId': 'user_martin_02',
+        'organizerName': 'Martín Gómez',
+        'imageUrl':
+            'https://images.unsplash.com/photo-1554068865-24cecd4e34b8?w=800',
+        'dateTime': ahora
+            .subtract(const Duration(days: 3, hours: 2))
+            .toIso8601String(),
+        'createdAt': ahora.subtract(const Duration(days: 4)).toIso8601String(),
+        'capacity': 2,
+        'joinedPlayerIds': ['user_martin_02', 'user_tobias_01'],
+        'clubName': 'Palermo Tenis Club',
+        'direccion': 'Av. Figueroa Alcorta 3300',
+        'barrio': 'Palermo Chico',
+        'lat': -34.5765,
+        'lng': -58.4120,
+        'status': 'finished',
+      },
+      {
+        'id': 'match_10',
+        'title': 'Dobles Clásico de Fin de Semana',
+        'modalidad': 'Dobles',
+        'superficie': 'Polvo de ladrillo',
+        'level': 'Intermedio',
+        'organizerId': 'user_lucas_03',
+        'organizerName': 'Lucas Rodríguez',
+        'imageUrl':
+            'https://images.unsplash.com/photo-1622279457486-62dcc4a431d6?w=800',
+        'dateTime': ahora
+            .subtract(const Duration(days: 7, hours: 3))
+            .toIso8601String(),
+        'createdAt': ahora.subtract(const Duration(days: 8)).toIso8601String(),
+        'capacity': 4,
+        'joinedPlayerIds': [
+          'user_lucas_03',
+          'user_tobias_01',
+          'user_nico_05',
+          'user_santi_04',
+        ],
+        'clubName': 'Recoleta Tenis Center',
+        'direccion': 'Av. Callao 1850',
+        'barrio': 'Recoleta',
+        'lat': -34.5875,
+        'lng': -58.3930,
+        'status': 'finished',
+      },
     ];
   }
 }

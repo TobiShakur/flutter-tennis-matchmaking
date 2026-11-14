@@ -208,76 +208,78 @@ class _LocationPickerMapScreenState extends State<LocationPickerMapScreen>
       backgroundColor: AppTheme.backgroundColor,
       body: Stack(
         children: [
-          FlutterMap(
-            mapController: _mapController,
-            options: MapOptions(
-              initialCenter: _mapCenter,
-              initialZoom: 14.0,
-              minZoom: 10.0,
-              maxZoom: 18.0,
-              onPositionChanged: (camera, hasGesture) {
-                if (hasGesture) {
-                  setState(() {
-                    _mapCenter = camera.center;
-                  });
-                }
-              },
-            ),
-            children: [
-              TileLayer(
-                urlTemplate: MapConfig.googleMapsTileUrl,
-                subdomains: MapConfig.googleMapsSubdomains,
-                userAgentPackageName: 'com.setpoint.tenisapp',
-                tileProvider: CancellableNetworkTileProvider(),
+          RepaintBoundary(
+            child: FlutterMap(
+              mapController: _mapController,
+              options: MapOptions(
+                initialCenter: _mapCenter,
+                initialZoom: 14.0,
+                minZoom: 10.0,
+                maxZoom: 18.0,
+                onPositionChanged: (camera, hasGesture) {
+                  if (hasGesture) {
+                    setState(() {
+                      _mapCenter = camera.center;
+                    });
+                  }
+                },
               ),
+              children: [
+                TileLayer(
+                  urlTemplate: MapConfig.googleMapsTileUrl,
+                  subdomains: MapConfig.googleMapsSubdomains,
+                  userAgentPackageName: 'com.setpoint.tenisapp',
+                  tileProvider: CancellableNetworkTileProvider(),
+                ),
 
-              // Marcadores de todos los clubes de CABA
-              MarkerLayer(
-                markers: kClubesTenisCABA.map((club) {
-                  final bool esSeleccionado =
-                      _selectedClub.clubNombre == club.clubNombre;
-                  return Marker(
-                    point: LatLng(club.latitud, club.longitud),
-                    width: esSeleccionado ? 48 : 40,
-                    height: esSeleccionado ? 48 : 40,
-                    child: GestureDetector(
-                      onTap: () => _seleccionarClub(club),
-                      child: AnimatedContainer(
-                        duration: const Duration(milliseconds: 200),
-                        decoration: BoxDecoration(
-                          color: esSeleccionado
-                              ? AppTheme.accentLimeColor
-                              : const Color(0xFF141C18),
-                          shape: BoxShape.circle,
-                          border: Border.all(
+                // Marcadores de todos los clubes de CABA
+                MarkerLayer(
+                  markers: kClubesTenisCABA.map((club) {
+                    final bool esSeleccionado =
+                        _selectedClub.clubNombre == club.clubNombre;
+                    return Marker(
+                      point: LatLng(club.latitud, club.longitud),
+                      width: esSeleccionado ? 48 : 40,
+                      height: esSeleccionado ? 48 : 40,
+                      child: GestureDetector(
+                        onTap: () => _seleccionarClub(club),
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 200),
+                          decoration: BoxDecoration(
+                            color: esSeleccionado
+                                ? AppTheme.accentLimeColor
+                                : const Color(0xFF141C18),
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: esSeleccionado
+                                  ? const Color(0xFF0E1311)
+                                  : AppTheme.accentLimeColor,
+                              width: esSeleccionado ? 2.5 : 1.5,
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: AppTheme.accentLimeColor.withValues(
+                                  alpha: 0.4,
+                                ),
+                                blurRadius: 8,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: Icon(
+                            Icons.sports_tennis_rounded,
+                            size: esSeleccionado ? 24 : 18,
                             color: esSeleccionado
                                 ? const Color(0xFF0E1311)
                                 : AppTheme.accentLimeColor,
-                            width: esSeleccionado ? 2.5 : 1.5,
                           ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: AppTheme.accentLimeColor.withValues(
-                                alpha: 0.4,
-                              ),
-                              blurRadius: 8,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
-                        ),
-                        child: Icon(
-                          Icons.sports_tennis_rounded,
-                          size: esSeleccionado ? 24 : 18,
-                          color: esSeleccionado
-                              ? const Color(0xFF0E1311)
-                              : AppTheme.accentLimeColor,
                         ),
                       ),
-                    ),
-                  );
-                }).toList(),
-              ),
-            ],
+                    );
+                  }).toList(),
+                ),
+              ],
+            ),
           ),
 
           SafeArea(

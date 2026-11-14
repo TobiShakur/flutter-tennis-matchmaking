@@ -44,9 +44,11 @@ class WelcomeScreen extends StatelessWidget {
             top: -40,
             right: -30,
             child: IgnorePointer(
-              child: CustomPaint(
-                size: const Size(220, 220),
-                painter: _TennisOrganicShapePainter(),
+              child: RepaintBoundary(
+                child: CustomPaint(
+                  size: const Size(220, 220),
+                  painter: _TennisOrganicShapePainter(),
+                ),
               ),
             ),
           ),

@@ -76,16 +76,16 @@ class _MatchDetailScreenState extends State<MatchDetailScreen>
         s.contains('rapida') ||
         s.contains('rápida') ||
         s.contains('dura')) {
-      return 'assets/images/stock/tennis_1.png';
+      return 'assets/images/stock/tennis_1.webp';
     }
     if (s.contains('cesped') ||
         s.contains('césped') ||
         s.contains('pasto') ||
         s.contains('grass')) {
-      return 'assets/images/stock/tennis_2.png';
+      return 'assets/images/stock/tennis_2.webp';
     }
     // Por defecto polvo de ladrillo (arcilla roja clásica)
-    return 'assets/images/stock/tennis_4.jpg';
+    return 'assets/images/stock/tennis_4.webp';
   }
 
   String _getCourtNetworkFallback(String superficie) =>
@@ -203,12 +203,14 @@ class _MatchDetailScreenState extends State<MatchDetailScreen>
           body: Stack(
             children: [
               Positioned.fill(
-                child: Image.asset(
-                  _getCourtAsset(partido.superficie),
-                  fit: BoxFit.cover,
-                  errorBuilder: (_, _, _) => Image.network(
-                    _getCourtNetworkFallback(partido.superficie),
+                child: RepaintBoundary(
+                  child: Image.asset(
+                    _getCourtAsset(partido.superficie),
                     fit: BoxFit.cover,
+                    errorBuilder: (_, _, _) => Image.network(
+                      _getCourtNetworkFallback(partido.superficie),
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
               ),
@@ -310,90 +312,90 @@ class _MatchDetailScreenState extends State<MatchDetailScreen>
                         child: Stack(
                           clipBehavior: Clip.none,
                           children: [
-                            AnimatedBuilder(
-                              animation: _blurAnimation,
-                              builder: (context, child) {
-                                return ClipRRect(
-                                  borderRadius: const BorderRadius.vertical(
-                                    top: Radius.circular(32),
-                                  ),
-                                  child: BackdropFilter(
-                                    filter: ImageFilter.blur(
-                                      sigmaX: _blurAnimation.value,
-                                      sigmaY: _blurAnimation.value,
+                            RepaintBoundary(
+                              child: AnimatedBuilder(
+                                animation: _blurAnimation,
+                                builder: (context, child) {
+                                  return ClipRRect(
+                                    borderRadius: const BorderRadius.vertical(
+                                      top: Radius.circular(32),
                                     ),
-                                    child: Container(
-                                      width: double.infinity,
-                                      padding: const EdgeInsets.fromLTRB(
-                                        22,
-                                        24,
-                                        22,
-                                        28,
+                                    child: BackdropFilter(
+                                      filter: ImageFilter.blur(
+                                        sigmaX: _blurAnimation.value,
+                                        sigmaY: _blurAnimation.value,
                                       ),
-                                      decoration: BoxDecoration(
+                                      child: child,
+                                    ),
+                                  );
+                                },
+                                child: Container(
+                                  width: double.infinity,
+                                  padding: const EdgeInsets.fromLTRB(
+                                    22,
+                                    24,
+                                    22,
+                                    28,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.black.withValues(alpha: 0.45),
+                                    borderRadius: const BorderRadius.vertical(
+                                      top: Radius.circular(32),
+                                    ),
+                                    border: Border.all(
+                                      color: Colors.white.withValues(
+                                        alpha: 0.18,
+                                      ),
+                                      width: 1.2,
+                                    ),
+                                    boxShadow: [
+                                      BoxShadow(
                                         color: Colors.black.withValues(
-                                          alpha: 0.45,
+                                          alpha: 0.4,
                                         ),
-                                        borderRadius:
-                                            const BorderRadius.vertical(
-                                              top: Radius.circular(32),
-                                            ),
-                                        border: Border.all(
-                                          color: Colors.white.withValues(
-                                            alpha: 0.18,
-                                          ),
-                                          width: 1.2,
-                                        ),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.black.withValues(
-                                              alpha: 0.4,
-                                            ),
-                                            blurRadius: 24,
-                                            offset: const Offset(0, -6),
-                                          ),
-                                        ],
+                                        blurRadius: 24,
+                                        offset: const Offset(0, -6),
                                       ),
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          _buildTeamsSection(
-                                            context,
-                                            esSingles: esSingles,
-                                            jugadores: jugadores,
-                                            cuposTotales: partido.cuposTotales,
-                                          ),
-
-                                          const SizedBox(height: 18),
-                                          Divider(
-                                            height: 1,
-                                            thickness: 1,
-                                            color: Colors.white.withValues(
-                                              alpha: 0.15,
-                                            ),
-                                          ),
-                                          const SizedBox(height: 18),
-
-                                          _buildRemainingInfo(partido),
-
-                                          const SizedBox(height: 22),
-
-                                          _buildActionButton(
-                                            context,
-                                            partido: partido,
-                                            yaEstoyUnido: yaEstoyUnido,
-                                            hayLugar: hayLugar,
-                                            estaProcesando: estaProcesando,
-                                            esCreador: esCreador,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
+                                    ],
                                   ),
-                                );
-                              },
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      _buildTeamsSection(
+                                        context,
+                                        esSingles: esSingles,
+                                        jugadores: jugadores,
+                                        cuposTotales: partido.cuposTotales,
+                                      ),
+
+                                      const SizedBox(height: 18),
+                                      Divider(
+                                        height: 1,
+                                        thickness: 1,
+                                        color: Colors.white.withValues(
+                                          alpha: 0.15,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 18),
+
+                                      _buildRemainingInfo(partido),
+
+                                      const SizedBox(height: 22),
+
+                                      _buildActionButton(
+                                        context,
+                                        partido: partido,
+                                        yaEstoyUnido: yaEstoyUnido,
+                                        hayLugar: hayLugar,
+                                        estaProcesando: estaProcesando,
+                                        esCreador: esCreador,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
                             ),
 
                             // Botón de Chat Flotante ubicado encima a la derecha del panel

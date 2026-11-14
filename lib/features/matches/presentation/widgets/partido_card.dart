@@ -67,6 +67,7 @@ class PartidoCard extends StatelessWidget {
                         partido.imagenUrl,
                         width: 50,
                         height: 50,
+                        cacheWidth: 160,
                         fit: BoxFit.cover,
                         errorBuilder: (context, error, stackTrace) => Container(
                           width: 50,

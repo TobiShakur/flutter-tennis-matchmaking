@@ -93,6 +93,7 @@ class PlayerSlotWidget extends StatelessWidget {
                 child: ClipOval(
                   child: Image.network(
                     jugador!.avatarUrl,
+                    cacheWidth: 160,
                     fit: BoxFit.cover,
                     errorBuilder: (_, _, _) => Container(
                       color: levelColor.withValues(alpha: 0.2),

@@ -619,6 +619,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           child: ClipOval(
                             child: Image.network(
                               jugador.avatarUrl,
+                              cacheWidth: 160,
                               fit: BoxFit.cover,
                               errorBuilder: (_, _, _) => Container(
                                 color: _getColorForLevel(

@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../constants/app_constants.dart';
 
 // Centralizador de tokens visuales y tema oficial SetPoint (Dark Glassmorphism + Lima Neón)
@@ -335,17 +334,22 @@ class AppTheme {
     );
   }
 
+  static const String _fontFamily = 'Poppins';
+
   static ThemeData get lightTheme {
+    final base = ThemeData.dark(useMaterial3: true);
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.dark,
+      fontFamily: _fontFamily,
       scaffoldBackgroundColor: backgroundColor,
       colorScheme: const ColorScheme.dark(
         primary: accentLimeColor,
         secondary: primaryColor,
         surface: cardColor,
       ),
-      textTheme: GoogleFonts.poppinsTextTheme(ThemeData.dark().textTheme),
+      textTheme: base.textTheme.apply(fontFamily: _fontFamily),
+      primaryTextTheme: base.primaryTextTheme.apply(fontFamily: _fontFamily),
       dialogTheme: DialogThemeData(
         backgroundColor: const Color(0xFF161E1A),
         surfaceTintColor: Colors.transparent,

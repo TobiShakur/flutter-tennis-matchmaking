@@ -212,57 +212,59 @@ class _HomeShellScreenState extends State<HomeShellScreen>
             // Navbar Flotante Dark Glass despegado del borde inferior
             Align(
               alignment: Alignment.bottomCenter,
-              child: SlideTransition(
-                position: _slideDownAnimation,
-                child: SafeArea(
-                  top: false,
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(22, 0, 22, 16),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(32),
-                      child: BackdropFilter(
-                        filter: ImageFilter.blur(sigmaX: 18, sigmaY: 18),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: const Color(
-                              0xFF141A17,
-                            ).withValues(alpha: 0.88),
-                            borderRadius: BorderRadius.circular(32),
-                            border: Border.all(
-                              color: Colors.white.withValues(alpha: 0.14),
-                              width: 1.2,
+              child: RepaintBoundary(
+                child: SlideTransition(
+                  position: _slideDownAnimation,
+                  child: SafeArea(
+                    top: false,
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(22, 0, 22, 16),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(32),
+                        child: BackdropFilter(
+                          filter: ImageFilter.blur(sigmaX: 18, sigmaY: 18),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: const Color(
+                                0xFF141A17,
+                              ).withValues(alpha: 0.88),
+                              borderRadius: BorderRadius.circular(32),
+                              border: Border.all(
+                                color: Colors.white.withValues(alpha: 0.14),
+                                width: 1.2,
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  blurRadius: 20,
+                                  color: Colors.black.withValues(alpha: 0.5),
+                                  offset: const Offset(0, 6),
+                                ),
+                              ],
                             ),
-                            boxShadow: [
-                              BoxShadow(
-                                blurRadius: 20,
-                                color: Colors.black.withValues(alpha: 0.5),
-                                offset: const Offset(0, 6),
-                              ),
-                            ],
-                          ),
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 14,
-                            vertical: 10,
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              _buildNavItem(
-                                'assets/images/icons/Home.svg',
-                                'Home',
-                                0,
-                              ),
-                              _buildNavItem(
-                                'assets/images/icons/cup.svg',
-                                'Mis partidos',
-                                1,
-                              ),
-                              _buildNavItem(
-                                'assets/images/icons/user.svg',
-                                'Cuenta',
-                                2,
-                              ),
-                            ],
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 14,
+                              vertical: 10,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                _buildNavItem(
+                                  'assets/images/icons/Home.svg',
+                                  'Home',
+                                  0,
+                                ),
+                                _buildNavItem(
+                                  'assets/images/icons/cup.svg',
+                                  'Mis partidos',
+                                  1,
+                                ),
+                                _buildNavItem(
+                                  'assets/images/icons/user.svg',
+                                  'Cuenta',
+                                  2,
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),

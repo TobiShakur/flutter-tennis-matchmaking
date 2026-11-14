@@ -96,6 +96,7 @@ class MatchDetailSheet extends StatelessWidget {
                             partidoActual.imagenUrl,
                             width: 64,
                             height: 64,
+                            cacheWidth: 160,
                             fit: BoxFit.cover,
                             errorBuilder: (context, error, stackTrace) =>
                                 Container(

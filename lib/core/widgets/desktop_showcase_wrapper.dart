@@ -57,34 +57,36 @@ class DesktopShowcaseWrapper extends StatelessWidget {
                     const SizedBox(width: 52),
 
                     // Columna derecha: Mockup interactivo del dispositivo móvil
-                    Container(
-                      width: 410,
-                      height: phoneHeight,
-                      decoration: BoxDecoration(
-                        color: AppTheme.backgroundColor,
-                        borderRadius: BorderRadius.circular(38),
-                        border: Border.all(
-                          color: Colors.white.withValues(alpha: 0.14),
-                          width: 3.0,
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: AppTheme.accentLimeColor.withValues(
-                              alpha: 0.08,
+                    RepaintBoundary(
+                      child: Container(
+                        width: 410,
+                        height: phoneHeight,
+                        decoration: BoxDecoration(
+                          color: AppTheme.backgroundColor,
+                          borderRadius: BorderRadius.circular(38),
+                          border: Border.all(
+                            color: Colors.white.withValues(alpha: 0.14),
+                            width: 3.0,
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: AppTheme.accentLimeColor.withValues(
+                                alpha: 0.08,
+                              ),
+                              blurRadius: 40,
+                              spreadRadius: 2,
                             ),
-                            blurRadius: 40,
-                            spreadRadius: 2,
-                          ),
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.70),
-                            blurRadius: 30,
-                            offset: const Offset(0, 16),
-                          ),
-                        ],
-                      ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(35),
-                        child: child,
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.70),
+                              blurRadius: 30,
+                              offset: const Offset(0, 16),
+                            ),
+                          ],
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(35),
+                          child: child,
+                        ),
                       ),
                     ),
                   ],

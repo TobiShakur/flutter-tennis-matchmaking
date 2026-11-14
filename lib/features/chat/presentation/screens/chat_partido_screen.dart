@@ -75,6 +75,7 @@ class _ChatPartidoScreenState extends State<ChatPartidoScreen> {
           avatarUrl,
           width: 36,
           height: 36,
+          cacheWidth: 160,
           fit: BoxFit.cover,
           errorBuilder: (context, error, stackTrace) => Container(
             color: const Color(0xFF161E1A),

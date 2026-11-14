@@ -141,224 +141,228 @@ class _MapFeedScreenState extends State<MapFeedScreen>
           backgroundColor: AppTheme.backgroundColor,
           body: Stack(
             children: [
-              FlutterMap(
-                mapController: _mapController,
-                options: MapOptions(
-                  initialCenter: userLatLng,
-                  initialZoom: _getZoomLevel(state.radioKm),
-                  minZoom: 9.5,
-                  maxZoom: 18.0,
-                  onPositionChanged: (camera, hasGesture) {
-                    if ((camera.zoom - _currentZoom).abs() > 0.08) {
-                      setState(() => _currentZoom = camera.zoom);
-                    }
-                  },
-                ),
-                children: [
-                  TileLayer(
-                    urlTemplate: _useGoogleMaps
-                        ? MapConfig.googleMapsTileUrl
-                        : MapConfig.cartoVoyagerTileUrl,
-                    subdomains: _useGoogleMaps
-                        ? MapConfig.googleMapsSubdomains
-                        : MapConfig.cartoSubdomains,
-                    userAgentPackageName: 'com.setpoint.tenisapp',
-                    tileProvider: CancellableNetworkTileProvider(),
+              RepaintBoundary(
+                child: FlutterMap(
+                  mapController: _mapController,
+                  options: MapOptions(
+                    initialCenter: userLatLng,
+                    initialZoom: _getZoomLevel(state.radioKm),
+                    minZoom: 9.5,
+                    maxZoom: 18.0,
+                    onPositionChanged: (camera, hasGesture) {
+                      if ((camera.zoom - _currentZoom).abs() > 0.08) {
+                        setState(() => _currentZoom = camera.zoom);
+                      }
+                    },
                   ),
+                  children: [
+                    TileLayer(
+                      urlTemplate: _useGoogleMaps
+                          ? MapConfig.googleMapsTileUrl
+                          : MapConfig.cartoVoyagerTileUrl,
+                      subdomains: _useGoogleMaps
+                          ? MapConfig.googleMapsSubdomains
+                          : MapConfig.cartoSubdomains,
+                      userAgentPackageName: 'com.setpoint.tenisapp',
+                      tileProvider: CancellableNetworkTileProvider(),
+                    ),
 
-                  // Círculo sombreado del radio en metros (Estilo Deportivo Lima Neón)
-                  CircleLayer(
-                    circles: [
-                      CircleMarker(
-                        point: userLatLng,
-                        radius: state.radioKm * 1000,
-                        useRadiusInMeter: true,
-                        color: AppTheme.accentLimeColor.withValues(alpha: 0.10),
-                        borderColor: AppTheme.accentLimeColor.withValues(
-                          alpha: 0.6,
-                        ),
-                        borderStrokeWidth: 2,
-                      ),
-                    ],
-                  ),
-
-                  // Marcadores de canchas y clusters
-                  MarkerLayer(
-                    markers: [
-                      // Marcador del usuario actual (Punto azul con halo)
-                      Marker(
-                        point: userLatLng,
-                        width: 44,
-                        height: 44,
-                        child: Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            Container(
-                              width: 32,
-                              height: 32,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: const Color(
-                                  0xFF2563EB,
-                                ).withValues(alpha: 0.25),
-                              ),
-                            ),
-                            Container(
-                              width: 18,
-                              height: 18,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: const Color(0xFF2563EB),
-                                border: Border.all(
-                                  color: Colors.white,
-                                  width: 2.5,
-                                ),
-                                boxShadow: const [
-                                  BoxShadow(
-                                    color: Colors.black26,
-                                    blurRadius: 4,
-                                    offset: Offset(0, 2),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-
-                      // Marcadores de partidos
-                      ...clusters.map((cluster) {
-                        final esClusterMultiple = cluster.length > 1;
-                        final partidoPrincipal = cluster.first;
-                        final double avgLat =
-                            cluster
-                                .map((p) => p.latitud)
-                                .reduce((a, b) => a + b) /
-                            cluster.length;
-                        final double avgLng =
-                            cluster
-                                .map((p) => p.longitud)
-                                .reduce((a, b) => a + b) /
-                            cluster.length;
-                        final pos = LatLng(avgLat, avgLng);
-
-                        return Marker(
-                          point: pos,
-                          width: esClusterMultiple ? 46 : 42,
-                          height: esClusterMultiple ? 46 : 42,
-                          child: GestureDetector(
-                            onTap: () async {
-                              final previousCenter =
-                                  _mapController.camera.center;
-                              final previousZoom = _mapController.camera.zoom;
-
-                              await _animatedMapMove(pos, 15.6);
-                              if (!context.mounted) return;
-
-                              if (esClusterMultiple) {
-                                await showModalBottomSheet(
-                                  context: context,
-                                  isScrollControlled: true,
-                                  backgroundColor: Colors.transparent,
-                                  builder: (_) => ClusterListBottomSheet(
-                                    partidos: cluster,
-                                    userLat: state.usuarioLat,
-                                    userLng: state.usuarioLng,
-                                  ),
-                                );
-                              } else {
-                                await showModalBottomSheet(
-                                  context: context,
-                                  isScrollControlled: true,
-                                  backgroundColor: Colors.transparent,
-                                  builder: (_) => MatchDetailSheet(
-                                    partido: partidoPrincipal,
-                                    userLat: state.usuarioLat,
-                                    userLng: state.usuarioLng,
-                                  ),
-                                );
-                              }
-
-                              if (context.mounted) {
-                                await _animatedMapMove(
-                                  previousCenter,
-                                  previousZoom,
-                                );
-                              }
-                            },
-                            child: esClusterMultiple
-                                ? Container(
-                                    decoration: BoxDecoration(
-                                      color: AppTheme.accentLimeColor,
-                                      shape: BoxShape.circle,
-                                      border: Border.all(
-                                        color: const Color(0xFF0E1311),
-                                        width: 2.2,
-                                      ),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.black.withValues(
-                                            alpha: 0.35,
-                                          ),
-                                          blurRadius: 8,
-                                          offset: const Offset(0, 3),
-                                        ),
-                                        BoxShadow(
-                                          color: AppTheme.accentLimeColor
-                                              .withValues(alpha: 0.45),
-                                          blurRadius: 10,
-                                          offset: const Offset(0, 1),
-                                        ),
-                                      ],
-                                    ),
-                                    alignment: Alignment.center,
-                                    child: Text(
-                                      '${cluster.length}',
-                                      style: const TextStyle(
-                                        color: Color(0xFF0E1311),
-                                        fontWeight: FontWeight.w900,
-                                        fontSize: 15,
-                                        letterSpacing: -0.3,
-                                      ),
-                                    ),
-                                  )
-                                : Container(
-                                    decoration: BoxDecoration(
-                                      color: const Color(0xFF141A17),
-                                      shape: BoxShape.circle,
-                                      border: Border.all(
-                                        color: AppTheme.accentLimeColor,
-                                        width: 2.2,
-                                      ),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.black.withValues(
-                                            alpha: 0.4,
-                                          ),
-                                          blurRadius: 8,
-                                          offset: const Offset(0, 3),
-                                        ),
-                                        BoxShadow(
-                                          color: AppTheme.accentLimeColor
-                                              .withValues(alpha: 0.3),
-                                          blurRadius: 6,
-                                          offset: const Offset(0, 1),
-                                        ),
-                                      ],
-                                    ),
-                                    alignment: Alignment.center,
-                                    child: const Icon(
-                                      Icons.sports_tennis_rounded,
-                                      color: AppTheme.accentLimeColor,
-                                      size: 19,
-                                    ),
-                                  ),
+                    // Círculo sombreado del radio en metros (Estilo Deportivo Lima Neón)
+                    CircleLayer(
+                      circles: [
+                        CircleMarker(
+                          point: userLatLng,
+                          radius: state.radioKm * 1000,
+                          useRadiusInMeter: true,
+                          color: AppTheme.accentLimeColor.withValues(
+                            alpha: 0.10,
                           ),
-                        );
-                      }),
-                    ],
-                  ),
-                ],
+                          borderColor: AppTheme.accentLimeColor.withValues(
+                            alpha: 0.6,
+                          ),
+                          borderStrokeWidth: 2,
+                        ),
+                      ],
+                    ),
+
+                    // Marcadores de canchas y clusters
+                    MarkerLayer(
+                      markers: [
+                        // Marcador del usuario actual (Punto azul con halo)
+                        Marker(
+                          point: userLatLng,
+                          width: 44,
+                          height: 44,
+                          child: Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              Container(
+                                width: 32,
+                                height: 32,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: const Color(
+                                    0xFF2563EB,
+                                  ).withValues(alpha: 0.25),
+                                ),
+                              ),
+                              Container(
+                                width: 18,
+                                height: 18,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: const Color(0xFF2563EB),
+                                  border: Border.all(
+                                    color: Colors.white,
+                                    width: 2.5,
+                                  ),
+                                  boxShadow: const [
+                                    BoxShadow(
+                                      color: Colors.black26,
+                                      blurRadius: 4,
+                                      offset: Offset(0, 2),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        // Marcadores de partidos
+                        ...clusters.map((cluster) {
+                          final esClusterMultiple = cluster.length > 1;
+                          final partidoPrincipal = cluster.first;
+                          final double avgLat =
+                              cluster
+                                  .map((p) => p.latitud)
+                                  .reduce((a, b) => a + b) /
+                              cluster.length;
+                          final double avgLng =
+                              cluster
+                                  .map((p) => p.longitud)
+                                  .reduce((a, b) => a + b) /
+                              cluster.length;
+                          final pos = LatLng(avgLat, avgLng);
+
+                          return Marker(
+                            point: pos,
+                            width: esClusterMultiple ? 46 : 42,
+                            height: esClusterMultiple ? 46 : 42,
+                            child: GestureDetector(
+                              onTap: () async {
+                                final previousCenter =
+                                    _mapController.camera.center;
+                                final previousZoom = _mapController.camera.zoom;
+
+                                await _animatedMapMove(pos, 15.6);
+                                if (!context.mounted) return;
+
+                                if (esClusterMultiple) {
+                                  await showModalBottomSheet(
+                                    context: context,
+                                    isScrollControlled: true,
+                                    backgroundColor: Colors.transparent,
+                                    builder: (_) => ClusterListBottomSheet(
+                                      partidos: cluster,
+                                      userLat: state.usuarioLat,
+                                      userLng: state.usuarioLng,
+                                    ),
+                                  );
+                                } else {
+                                  await showModalBottomSheet(
+                                    context: context,
+                                    isScrollControlled: true,
+                                    backgroundColor: Colors.transparent,
+                                    builder: (_) => MatchDetailSheet(
+                                      partido: partidoPrincipal,
+                                      userLat: state.usuarioLat,
+                                      userLng: state.usuarioLng,
+                                    ),
+                                  );
+                                }
+
+                                if (context.mounted) {
+                                  await _animatedMapMove(
+                                    previousCenter,
+                                    previousZoom,
+                                  );
+                                }
+                              },
+                              child: esClusterMultiple
+                                  ? Container(
+                                      decoration: BoxDecoration(
+                                        color: AppTheme.accentLimeColor,
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
+                                          color: const Color(0xFF0E1311),
+                                          width: 2.2,
+                                        ),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.black.withValues(
+                                              alpha: 0.35,
+                                            ),
+                                            blurRadius: 8,
+                                            offset: const Offset(0, 3),
+                                          ),
+                                          BoxShadow(
+                                            color: AppTheme.accentLimeColor
+                                                .withValues(alpha: 0.45),
+                                            blurRadius: 10,
+                                            offset: const Offset(0, 1),
+                                          ),
+                                        ],
+                                      ),
+                                      alignment: Alignment.center,
+                                      child: Text(
+                                        '${cluster.length}',
+                                        style: const TextStyle(
+                                          color: Color(0xFF0E1311),
+                                          fontWeight: FontWeight.w900,
+                                          fontSize: 15,
+                                          letterSpacing: -0.3,
+                                        ),
+                                      ),
+                                    )
+                                  : Container(
+                                      decoration: BoxDecoration(
+                                        color: const Color(0xFF141A17),
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
+                                          color: AppTheme.accentLimeColor,
+                                          width: 2.2,
+                                        ),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.black.withValues(
+                                              alpha: 0.4,
+                                            ),
+                                            blurRadius: 8,
+                                            offset: const Offset(0, 3),
+                                          ),
+                                          BoxShadow(
+                                            color: AppTheme.accentLimeColor
+                                                .withValues(alpha: 0.3),
+                                            blurRadius: 6,
+                                            offset: const Offset(0, 1),
+                                          ),
+                                        ],
+                                      ),
+                                      alignment: Alignment.center,
+                                      child: const Icon(
+                                        Icons.sports_tennis_rounded,
+                                        color: AppTheme.accentLimeColor,
+                                        size: 19,
+                                      ),
+                                    ),
+                            ),
+                          );
+                        }),
+                      ],
+                    ),
+                  ],
+                ),
               ),
 
               // Barra de navegación superior
